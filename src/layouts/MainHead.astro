@@ -6,21 +6,27 @@ const { title, description, image, data, robots } = Astro.props;
 ---
 
 <head>
-  <meta charset="utf-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width" />
-  <meta name="generator" content={Astro.generator} />
-  <title>{title}</title>
-  <meta name="description" content={description} />
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<meta name="viewport" content="width=device-width" />
+	<meta name="generator" content={Astro.generator} />
+	<title>{title}</title>
+	<meta name="description" content={description} />
 
-  <Seo {title} {description} url={Astro.url} {image} {data} {robots} />
+  	<link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon-16x16.png">
+	<link rel="manifest" href="/icon/site.webmanifest">
+	<link rel="mask-icon" href="/icon/safari-pinned-tab.svg" color="#ffffff">
+	<link rel="shortcut icon" href="/icon/favicon.ico">
+	<meta name="apple-mobile-web-app-title" content="AstroBlog">
+	<meta name="application-name" content="AstroBlog">
+	<meta name="msapplication-TileColor" content="#ffc40d">
+	<meta name="msapplication-config" content="/icon/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" /><link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  /><link
-    href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-    rel="stylesheet"
-  />
+	<Seo {title} {description} url={Astro.url} {image} {data} {robots} />	
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+	<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"/>
 </head>

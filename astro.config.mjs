@@ -1,15 +1,17 @@
 import { defineConfig } from 'astro/config';
-
-// https://astro.build/config
 import image from "@astrojs/image";
-
-// https://astro.build/config
 import sitemap from "@astrojs/sitemap";
+import compress from "astro-compress";
+import serviceWorker from './src/serviceWorker/index'
 
-// https://astro.build/config
 export default defineConfig({
+  compressHTML: true,
   site: 'https://astro-blog-cip.netlify.app',
-  integrations: [image({
-    serviceEntryPoint: '@astrojs/image/sharp'
-  }), sitemap()]
+  integrations: 
+  	[
+		image({ serviceEntryPoint: '@astrojs/image/sharp' }), 
+		sitemap(), 
+		serviceWorker(),
+		compress(),
+	]
 });
