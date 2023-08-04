@@ -3,11 +3,10 @@ self.addEventListener('push', (event) => {
 	event.waitUntil(
 		self.clients.matchAll().then((clientList) => {
 			console.log(
-				`[Service Worker] Push had this data: "${event.data.text()}"`,
+				`[SWORKER push] Push had this data: "${event.data.text()}"`,
 			)
 
 			var focused = clientList.some((client) => {
-				console.log('[CLIENT]', client)
 				client.postMessage({ msg: event.data.json(), type: 'push' })
 				return client.focused
 			})
@@ -52,11 +51,11 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
 	event.waitUntil(
 		self.clients.matchAll().then((clientList) => {
-			console.log(
-				'[Service Worker] Notification click Received.',
-				clientList,
-				event.notification.data,
-			)
+			// console.log(
+			// 	'[SWORKER notification] Notification click Received.',
+			// 	clientList,
+			// 	event.notification.data,
+			// )
 
 			var data =
 				'undefined' !== typeof event.notification['data']
@@ -75,7 +74,7 @@ self.addEventListener('notificationclick', (event) => {
 				self.clients
 					.openWindow('/profile')
 					.then((c) => {
-						console.log('CLIENT OpenWindow: ', c)
+						// console.log('[SWORKER client] OpenWindow: ', c)
 						return c
 					})
 					.then((a) => {

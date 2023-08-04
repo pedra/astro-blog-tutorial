@@ -10,7 +10,7 @@
  * 
  */
 self.addEventListener('periodicsync', (event) => {
-	console.log('Periodic Sync',  event)
+	console.log('[SWORKER sync] Periodic Sync',  event)
 	if (event.tag === 'get-daily-news') {
 		//event.waitUntil(getDailyNewsInCache())
 	}

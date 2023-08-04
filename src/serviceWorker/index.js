@@ -2,9 +2,17 @@ import { readdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join, resolve, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 
+/**
+ * Experimental & optional 
+ */
+import { obfuscate } from 'javascript-obfuscator'
+import { minify } from 'uglify-js'
+
 const SW_NAME = "sw.js"
 const PARTS = ['cache', 'message', 'fetch', 'push', 'sync']
 const SW_DIR = resolve(process.cwd(), 'src/serviceWorker')
+const UGLIFY = true
+const OBFUSCATE = true
 
 /** Mount the serviceWorker 
  * 1. concatenate the "parts" files
@@ -12,6 +20,7 @@ const SW_DIR = resolve(process.cwd(), 'src/serviceWorker')
  */
 const createSw = (buildDir) => {
 	const target = join(buildDir ?? SW_DIR, SW_NAME)
+	const mode = buildDir ? 'pro' : 'dev'
 	const partDir = SW_DIR + '/parts'
 
 	let assets = createAssets(buildDir)
@@ -20,13 +29,21 @@ const createSw = (buildDir) => {
 
 	try {
 		PARTS.map(f => out += readFileSync(join(partDir, f + '.js')).toString() + "\n\n")
+
+		// Add Obfuscator & uglify (experimental)
+		if (mode === 'pro') {
+			if (OBFUSCATE) out = obfuscate(out).getObfuscatedCode()
+			if (UGLIFY) out = minify(out, {toplevel: true}).code
+		}
+
 		writeFileSync(target, out)
+
 	} catch (error) {
 		console.log(error)
 	}
 }
 
-const createCache = (buildDir) => `CACHE='cache-${new Date().getTime()}${buildDir ? '_pro' : '_dev'}'`
+const createCache = (buildDir) => `CACHE='cache-${new Date().getTime()}${buildDir ? '-pro' : '-dev'}'`
 
 const createAssets = (buildDir) => {
 	if (!buildDir) return 'ASSETS=[]'
