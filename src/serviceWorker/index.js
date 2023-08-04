@@ -93,7 +93,7 @@ const createPlugin = () => ({
 			if (command === "dev") {
 				injectRoute({
 					pattern: `/${SW_NAME}`,
-					entryPoint: fileURLToPath(new URL("./dev-route.js", import.meta.url)),
+					entryPoint: fileURLToPath(new URL("./route.js", import.meta.url)),
 				})
 			}
 		},
