@@ -1,13 +1,11 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs"
+import { readFile } from "node:fs/promises"
 import { join, resolve, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
-
-/**
- * Experimental & optional 
- */
 import { obfuscate } from 'javascript-obfuscator'
 import { minify } from 'uglify-js'
 
+// Definition of constants
 const SW_NAME = "sw.js"
 const PARTS = ['cache', 'message', 'fetch', 'push', 'sync']
 const SW_DIR = resolve(process.cwd(), 'src/serviceWorker')
@@ -16,7 +14,7 @@ const OBFUSCATE = true
 
 /** Mount the serviceWorker 
  * 1. concatenate the "parts" files
- * 2. save the final file (./dist/ | ./src/serviceWorker/)
+ * 2. save the final file (./dist/ or ./src/serviceWorker/)
  */
 const createSw = (buildDir) => {
 	const target = join(buildDir ?? SW_DIR, SW_NAME)
@@ -33,7 +31,7 @@ const createSw = (buildDir) => {
 		// Add Obfuscator & uglify (experimental)
 		if (mode === 'pro') {
 			if (OBFUSCATE) out = obfuscate(out).getObfuscatedCode()
-			if (UGLIFY) out = minify(out, {toplevel: true}).code
+			if (UGLIFY) out = minify(out, { toplevel: true }).code
 		}
 
 		writeFileSync(target, out)
@@ -54,7 +52,6 @@ const createAssets = (buildDir) => {
 
 	return out + '\n]'
 }
-
 
 // Scan the build directory (./dist)
 const treeFiles = (dir, removeDir = '', depth = 1000) => {
@@ -93,15 +90,22 @@ const createPlugin = () => ({
 			if (command === "dev") {
 				injectRoute({
 					pattern: `/${SW_NAME}`,
-					entryPoint: fileURLToPath(new URL("./route.js", import.meta.url)),
+					entryPoint: fileURLToPath(new URL("./index.js", import.meta.url)),
 				})
 			}
 		},
 
-		"astro:build:done": async ({ dir }) => {
-			// Mount sw.js file
-			createSw(fileURLToPath(dir))
-		},
+		"astro:build:done": async ({ dir }) => createSw(fileURLToPath(dir))
 	}
 })
+
+// Route to load the service worker in "dev" mode.
+export async function get() {
+	const sw = await readFile(fileURLToPath(
+		new URL("./sw.js", import.meta.url)), 
+		{ encoding: "utf8" }
+	)
+	return { body: sw }
+}
+
 export default createPlugin
