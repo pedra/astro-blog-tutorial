@@ -1,5 +1,3 @@
-ASSETS.push('/icon/favicon.ico')
-
 // INSTALL  -------------------------------------------------------------------
 self.addEventListener('install', e =>
 	e.waitUntil(
