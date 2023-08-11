@@ -41,7 +41,7 @@ self.addEventListener('fetch', (event) => {
 					if (url.startsWith('chrome-extension') ||
 						url.includes('extension') ||
 						!(url.indexOf('http') === 0))
-						return response
+						return await fetch(event.request)
 
 					response = await cache.match(event.request.url += 'index.html')
 					if(response) return response
